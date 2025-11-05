@@ -1,0 +1,206 @@
+/* Add this corrected CSS */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins";
+    color: #fff;
+}
+
+body{
+    background-color: #0f0f20;
+}
+
+.main-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.menuToggle{
+    position: absolute;
+    bottom: 30px;
+    height: 70px;
+    width: 70px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #000;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.menuToggle i{
+    font-size: 50px;
+    color: #0f0f20;
+}
+.container{
+    height: 30px;
+    width: 30px;
+    border: 3px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
+    background: #fff;
+    overflow: hidden;
+    position: absolute;
+    bottom: 30px;
+    z-index: -1;
+    transition: .5s,height .5s,width .5s;
+    transition-delay: 1s,0.5s, 0.5s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.menuToggle.active ~ .container{
+    height: 550px;
+    width: 390px;
+    z-index: 1;
+    transition-delay: 0s,0.5s, 0.5s;
+    transform: translateY(-100px);
+}
+
+.container::before{
+    content: "";
+    position: absolute;
+    background: #fff;
+    height: 100px;
+    width: 100px;
+    left: 50%;
+    right: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    transition: .5s;
+}
+
+.menuToggle.active ~ .container::before{
+    transition-delay: .5s;
+}
+
+.container .top-part{
+    height: 100px;
+    background: #0f0f20;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container .top-part i{
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.top-part .agent-details{
+    display: flex;
+    align-items: center;
+}
+
+.container .top-part .agent-details img{
+    height: 70px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.top-part .agent-text{
+    margin-left: 10px;
+}
+
+.agent-text h3{
+    font-size: 15px;
+}
+
+.agent-text p{
+    font-size: 11px;
+}
+
+.agent-text span{
+    color: #0f0;
+}
+
+.chat-section{
+    position: relative;
+    padding: 0 20px;
+    height: 350px;
+    overflow-y: auto;
+}
+
+.left-part{
+    margin: 60px 0;
+    max-width: 260px;
+}
+
+.agent-chat{
+    display: flex;
+    align-items: center;
+}
+
+.left-part img{
+    height: 50px;
+    background: #0f0f20;
+    border-radius: 50%;
+}
+
+.left-part p{
+    color: #555;
+    font-weight: 400;
+    font-size: 15px;
+    background: rgba(0, 0, 0, .1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 10px;
+}
+
+.chat-section .right-part{
+    margin: 20px 0;
+    text-align: right;
+    max-width: 260px;
+    float: right;
+    font-size: 14px;
+}
+
+.chat-section .right-part p{
+    color: #fff;
+    font-size: 13px;
+    background: #0f0f20;
+    padding: 8px 24px;
+    border-radius: 10px;
+}
+
+.chat-section .right-part span{
+    color: #555;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.bottom-section{
+    position: absolute;
+    bottom: 10px;
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    border-top: 2px solid rgba(0, 0, 0, .1);
+    padding: 10px;
+}
+
+.bottom-section i{
+    color: #0f0f20;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.bottom-section textarea{
+    height: 45px;
+    width: 80%;
+    color: #0f0f20;
+    padding: 0 5px;
+    resize: none;
+    outline: none;
+    border: none;
+    text-transform: capitalize;
+    overflow-y: hidden;
+}

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #0f0f20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .chat-container {
+            width: 380px;
+            height: 600px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            height: 80px;
+            background: #0f0f20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .agent-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .agent-profile img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #fff;
+        }
+
+        .agent-info h3 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .agent-info p {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .agent-info span {
+            color: #0f0;
+        }
+
+        .close-btn {
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            max-width: 80%;
+            clear: both;
+        }
+
+        .bot-message {
+            display: flex;
+            align-items: flex-start;
+            float: left;
+        }
+
+        .bot-message img {
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: #0f0f20;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .bot-message .message-content {
+            background-color: #fff;
+            color: #333;
+            border-top-left-radius: 4px;
+        }
+
+        .user-message {
+            float: right;
+        }
+
+        .user-message .message-content {
+            background-color: #0f0f20;
+            color: #fff;
+            border-top-right-radius: 4px;
+        }
+
+        .chat-input {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            height: 50px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            resize: none;
+            font-size: 14px;
+            color: #333;
+            background-color: #f5f5f5;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input textarea:focus {
+            border-color: #0f0f20;
+        }
+
+        .send-btn {
+            margin-left: 12px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f0f20;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background-color: #1a1a30;
+        }
+
+        .send-btn i {
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .voice-btn {
+            margin-left: 12px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f0f20;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .voice-btn:hover {
+            background-color: #1a1a30;
+        }
+
+        .voice-btn i {
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .voice-btn.listening {
+            background-color: #ff3b30;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .toggle-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            height: 60px;
+            width: 60px;
+            background: #0f0f20;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .toggle-chat i {
+            font-size: 32px;
+            color: #fff;
+        }
+
+        .toggle-chat:hover {
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Loading animation for bot typing */
+        .typing {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .typing img {
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: #0f0f20;
+        }
+
+        .typing-indicator {
+            padding: 12px 16px;
+            background-color: #fff;
+            border-radius: 18px;
+            border-top-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            float: left;
+            margin: 0 1px;
+            background-color: #9E9EA1;
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation: typing 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation: typing 1s infinite 0.33s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation: typing 1s infinite 0.66s;
+        }
+
+        @keyframes typing {
+            0% { transform: translateY(0px); }
+            28% { transform: translateY(-5px); }
+            44% { transform: translateY(0px); }
+        }
+
+        /* Scroll styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #0f0f20;
+        }
+
+        /* Sound Wave Animation */
+        .sound-wave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+        }
+
+        .sound-wave .bar {
+            background: #0f0f20;
+            width: 3px;
+            height: 6px;
+            margin: 0 2px;
+            border-radius: 1px;
+            animation: sound-wave-animation 0.8s infinite;
+        }
+
+        .sound-wave .bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .sound-wave .bar:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .sound-wave .bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .sound-wave .bar:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes sound-wave-animation {
+            0% { height: 6px; }
+            50% { height: 15px; }
+            100% { height: 6px; }
+        }
+
+        /* Responsiveness */
+        @media (max-width: 480px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .toggle-chat {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Chat toggle button -->
+    <div class="toggle-chat" id="toggle-chat">
+        <i class='bx bx-message-dots'></i>
+    </div>
+
+    <!-- Chat container -->
+    <div class="chat-container hidden" id="chat-container">
+        <div class="chat-header">
+            <div class="agent-profile">
+                <img src="chatbot.png" alt="Chatbot" />
+                <div class="agent-info">
+                    <h3>Chatbot</h3>
+                    <p>Agent <span>(Online)</span></p>
+                </div>
+            </div>
+            <div class="close-btn" id="close-chat">
+                <i class='bx bx-x'></i>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <!-- Bot welcome message -->
+            <div class="message bot-message">
+                <img src="chatbot.png" alt="Chatbot" />
+                <div class="message-content">Hey! Ask me anything. You can type or use the voice button to speak.</div>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <textarea id="user-input" placeholder="Type a message..."></textarea>
+            <div class="voice-btn" id="voice-btn">
+                <i class='bx bx-microphone'></i>
+            </div>
+            <div class="send-btn" id="send-btn">
+                <i class='bx bxs-send'></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleChat = document.getElementById("toggle-chat");
+            const closeChat = document.getElementById("close-chat");
+            const chatContainer = document.getElementById("chat-container");
+            const chatMessages = document.getElementById("chat-messages");
+            const userInput = document.getElementById("user-input");
+            const sendBtn = document.getElementById("send-btn");
+            const voiceBtn = document.getElementById("voice-btn");
+
+            // Speech recognition setup
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            // Speech synthesis setup
+            const synth = window.speechSynthesis;
+
+            // Toggle chat visibility
+            toggleChat.addEventListener("click", () => {
+                chatContainer.classList.toggle("hidden");
+                if (!chatContainer.classList.contains("hidden")) {
+                    userInput.focus();
+                }
+            });
+
+            // Close chat
+            closeChat.addEventListener("click", () => {
+                chatContainer.classList.add("hidden");
+            });
+
+            // Voice recognition
+            let isListening = false;
+
+            voiceBtn.addEventListener("click", () => {
+                if (!isListening) {
+                    startListening();
+                } else {
+                    stopListening();
+                }
+            });
+
+            function startListening() {
+                try {
+                    recognition.start();
+                    isListening = true;
+                    voiceBtn.classList.add("listening");
+                    voiceBtn.innerHTML = `
+                        <div class="sound-wave">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error("Error starting speech recognition:", error);
+                }
+            }
+
+            function stopListening() {
+                recognition.stop();
+                isListening = false;
+                voiceBtn.classList.remove("listening");
+                voiceBtn.innerHTML = '<i class="bx bx-microphone"></i>';
+            }
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                stopListening();
+                // Auto send after voice input
+                setTimeout(() => sendMessage(), 500);
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                stopListening();
+                addMessage("Sorry, I couldn't hear you. Please try again or type your message.", "bot");
+            };
+
+            // Text to speech function
+            const speakText = (text) => {
+                // Stop any ongoing speech
+                if (synth.speaking) {
+                    synth.cancel();
+                }
+
+                // Create speech utterance
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                
+                // Speak
+                synth.speak(utterance);
+            };
+
+            // Send message function
+            const sendMessage = async () => {
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                addMessage(message, "user");
+                userInput.value = "";
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                try {
+                    const response = await fetch("http://127.0.0.1:5000/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    // Remove typing indicator and add bot response
+                    removeTypingIndicator();
+                    addMessage(data.response, "bot");
+                    
+                    // Speak the bot's response
+                    speakText(data.response);
+                } catch (error) {
+                    console.error("Error fetching response:", error);
+                    
+                    // Remove typing indicator and show error message
+                    removeTypingIndicator();
+                    const errorMsg = "Sorry, I'm having trouble responding right now. Please try again later.";
+                    addMessage(errorMsg, "bot");
+                    speakText(errorMsg);
+                }
+            };
+
+            // Add message to chat
+            const addMessage = (text, sender) => {
+                const messageDiv = document.createElement("div");
+                messageDiv.classList.add("message");
+                
+                if (sender === "user") {
+                    messageDiv.classList.add("user-message");
+                    messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+                } else {
+                    messageDiv.classList.add("bot-message");
+                    messageDiv.innerHTML = `
+                        <img src="chatbot.png" alt="Chatbot" />
+                        <div class="message-content">${text}</div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            };
+
+            // Show typing indicator
+            const showTypingIndicator = () => {
+                const typingDiv = document.createElement("div");
+                typingDiv.classList.add("typing");
+                typingDiv.id = "typing-indicator";
+                typingDiv.innerHTML = `
+                    <img src="chatbot.png" alt="Chatbot" />
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                `;
+                chatMessages.appendChild(typingDiv);
+                scrollToBottom();
+            };
+
+            // Remove typing indicator
+            const removeTypingIndicator = () => {
+                const typingIndicator = document.getElementById("typing-indicator");
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            };
+
+            // Scroll to bottom of chat
+            const scrollToBottom = () => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            // Event listeners
+            sendBtn.addEventListener("click", sendMessage);
+            
+            userInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Auto-resize textarea
+            userInput.addEventListener("input", function() {
+                this.style.height = "auto";
+                const maxHeight = 100;
+                this.style.height = (this.scrollHeight > maxHeight ? maxHeight : this.scrollHeight) + "px";
+            });
+
+            // Check for browser support
+            if (!SpeechRecognition) {
+                voiceBtn.style.display = "none";
+                addMessage("Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari for voice features.", "bot");
+            }
+
+            if (!synth) {
+                addMessage("Text-to-speech is not supported in your browser.", "bot");
+            }
+        });
+    </script>
+</body>
+</html>

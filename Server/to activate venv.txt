@@ -1,0 +1,6 @@
+to activate venv run below code
+
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\venv\Scripts\Activate.ps1
+ venv\Scripts\activate
