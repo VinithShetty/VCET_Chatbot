@@ -79,7 +79,7 @@ VCET_Chatbot/
 
 3. **Install Python dependencies**
    ```bash
-   pip install flask flask-cors python-dotenv groq pinecone-client sentence-transformers
+   pip install flask flask-cors python-dotenv groq pinecone sentence-transformers
    ```
 
 4. **Configure environment variables**

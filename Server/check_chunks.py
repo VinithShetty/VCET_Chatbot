@@ -1,10 +1,15 @@
+import os
+from dotenv import load_dotenv
 import pinecone
 import time
 from sentence_transformers import SentenceTransformer
 
-# Load API key and environment
-PINECONE_API_KEY = "pcsk_7GMvEr_Pe8fT731qrQTiyVYoobsgRwmGU1PLs5Uz6NjLYaZjGBSuoH3BMDkau9KY1RjFtK"
-PINECONE_ENV = "us-east-1-aws"
+# Load environment variables from .env file
+load_dotenv()
+
+# Load API key and environment from environment variables
+PINCONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINCONE_ENV = os.getenv("PINECONE_ENV", "us-east-1-aws")
 INDEX_NAME = "vcet-chatbot"
 
 # Initialize Pinecone

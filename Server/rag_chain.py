@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 from groq import Groq
 from pinecone import Pinecone
@@ -70,6 +70,17 @@ def chat():
     chatbot.conversation_history.append({"role": "bot", "content": response})
     
     return jsonify({"response": response})
+
+@app.route('/')
+def serve_index():
+    return send_from_directory('../chatbot', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('../chatbot', path)
+
+if __name__ == "__main__":
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
 
 if __name__ == "__main__":
     app.run(debug=True)

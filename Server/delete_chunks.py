@@ -1,8 +1,13 @@
+import os
+from dotenv import load_dotenv
 import pinecone
 
-# Load API key and environment
-PINECONE_API_KEY = "pcsk_7GMvEr_Pe8fT731qrQTiyVYoobsgRwmGU1PLs5Uz6NjLYaZjGBSuoH3BMDkau9KY1RjFtK"
-PINECONE_ENV = "us-east-1-aws"  # v3 format includes provider (e.g., aws)
+# Load environment variables from .env file
+load_dotenv()
+
+# Load API key and environment from environment variables
+PINCONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINCONE_ENV = os.getenv("PINECONE_ENV", "us-east-1-aws")  # Default if not set
 
 # Initialize Pinecone using the new class method
 pc = pinecone.Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)

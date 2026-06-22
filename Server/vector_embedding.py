@@ -1,11 +1,15 @@
 import os
 import json
+from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
 from sentence_transformers import SentenceTransformer
 
-# Load API keys
-PINECONE_API_KEY = "pcsk_7GMvEr_Pe8fT731qrQTiyVYoobsgRwmGU1PLs5Uz6NjLYaZjGBSuoH3BMDkau9KY1RjFtK"
-PINECONE_ENV = "us-east-1"  # Adjust based on your Pinecone region
+# Load environment variables from .env file
+load_dotenv()
+
+# Load API keys from environment variables
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_ENV = os.getenv("PINECONE_ENV", "us-east-1")  # Default to us-east-1 if not set
 
 # Initialize Pinecone
 pc = Pinecone(api_key=PINECONE_API_KEY)
