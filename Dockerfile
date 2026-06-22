@@ -6,8 +6,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     # Model caches must live in a writable dir (HF Spaces containers are read-only except /tmp)
     HF_HOME=/tmp/hf_cache \
-    SENTENCE_TRANSFORMERS_HOME=/tmp/st_cache \
-    TRANSFORMERS_CACHE=/tmp/hf_cache
+    SENTENCE_TRANSFORMERS_HOME=/tmp/st_cache
 
 WORKDIR /app
 
