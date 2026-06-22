@@ -1,3 +1,13 @@
+---
+title: VCET Chatbot
+emoji: 🎓
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # VCET Chatbot 🤖
 
 An intelligent RAG (Retrieval-Augmented Generation) chatbot built with Flask, Pinecone, and Groq AI, featuring a modern web interface with voice interaction capabilities.
